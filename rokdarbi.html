@@ -78,11 +78,85 @@ nav a:hover{
   background:rgba(255,255,255,0.6);
 }
 
+.mobile-menu-toggle{
+  display:none;
+}
+
 @media (max-width:680px){
-  header{padding:16px 18px;flex-wrap:wrap;gap:12px;}
-  .logo{font-size:17px;padding:11px 18px;}
-  nav{gap:2px;padding:6px;}
-  nav a{font-size:12px;padding:8px 11px;}
+  header{
+    position:fixed;
+    top:18px;
+    left:50%;
+    transform:translateX(-50%);
+    width:auto;
+    max-width:calc(100vw - 20px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    padding:10px 12px;
+    background:rgba(255,255,255,0.18);
+    backdrop-filter:blur(10px);
+    border:1px solid rgba(255,255,255,0.35);
+    border-radius:999px;
+    box-shadow:0 12px 30px rgba(0,0,0,0.12);
+  }
+
+  .logo{display:none;}
+
+  .mobile-menu-toggle{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:54px;
+    height:54px;
+    border:none;
+    border-radius:50%;
+    background:var(--clay);
+    box-shadow:0 12px 24px rgba(223,133,69,0.35);
+    cursor:pointer;
+    color:#fff;
+    font-size:28px;
+    line-height:1;
+  }
+
+  nav{
+    position:fixed;
+    top:84px;
+    left:50%;
+    transform:translateX(-50%) translateY(-8px);
+    width:min(320px, calc(100vw - 24px));
+    display:none;
+    flex-direction:column;
+    gap:8px;
+    background:rgba(255,255,255,0.22);
+    border:1px solid rgba(255,255,255,0.4);
+    border-radius:22px;
+    padding:12px;
+    backdrop-filter:blur(10px);
+    box-shadow:0 18px 40px rgba(0,0,0,0.18);
+  }
+
+  nav.open{
+    display:flex;
+    transform:translateX(-50%) translateY(0);
+  }
+
+  nav a{
+    display:block;
+    width:100%;
+    text-align:center;
+    padding:14px 16px;
+    border-radius:14px;
+    background:rgba(255,255,255,0.12);
+    color:var(--brown);
+    font-size:15px;
+    font-weight:700;
+  }
+
+  nav a:hover{ background:rgba(255,255,255,0.2); transform:none; }
+
+  .hero .content{ max-width:none; width:calc(100% - 36px); padding:32px 26px; }
 }
 
 /* Hero */
@@ -590,6 +664,7 @@ nav a:hover{
   justify-content:center;
   padding:20px;
   z-index:50;
+  overflow-y:auto;
 }
 
 .overlay.open{
@@ -601,9 +676,16 @@ nav a:hover{
   border-radius:14px;
   max-width:420px;
   width:100%;
+  max-height:calc(100vh - 24px);
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
   padding:32px 28px;
   position:relative;
   box-shadow:0 20px 50px rgba(91,67,50,0.25);
+}
+
+body.modal-open {
+  overflow:hidden;
 }
 
 .modal-close{
@@ -768,6 +850,57 @@ nav a:hover{
   color:var(--brown-soft);
 }
 
+@media (max-width:480px){
+  .overlay{
+    padding:12px;
+  }
+
+  .modal{
+    max-width:100%;
+    padding:28px 16px 20px;
+  }
+
+  .field input,
+  .field select,
+  .modal .cta{
+    font-size:16px;
+  }
+
+  .calendar-header{
+    padding:8px 10px;
+  }
+
+  .calendar-nav-btn{
+    width:28px;
+    height:28px;
+    font-size:18px;
+  }
+
+  .calendar-weekdays,
+  .calendar-days{
+    gap:4px;
+    padding-left:8px;
+    padding-right:8px;
+  }
+
+  .calendar-weekdays span,
+  .calendar-days div{
+    min-height:28px;
+    font-size:10.5px;
+  }
+
+  .day-select{
+    gap:8px;
+  }
+
+  .day-option{
+    flex:1 1 calc(50% - 8px);
+    min-width:0;
+    padding:8px 10px;
+    font-size:12px;
+  }
+}
+
 .dot{
   display:inline-block;
   width:10px;
@@ -847,7 +980,8 @@ footer{
 
 <header id="siteHeader">
   <div class="logo">Spindzeles</div>
-  <nav>
+  <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Atvērt izvēlni" aria-expanded="false">☰</button>
+  <nav id="mainNav">
     <a href="index.html">Sākums</a>
     <a href="darbicas.html">Darbnīcas</a>
     <a href="rokdarbi.html">Radošas nodarbības</a>
@@ -1328,6 +1462,7 @@ window.addEventListener('scroll', function(){
 });
 
 function openModal(planLabel){
+  document.body.classList.add('modal-open');
   document.getElementById('modalPlan').textContent = planLabel;
   document.getElementById('formView').style.display = 'block';
   document.getElementById('successView').style.display = 'none';
@@ -1337,12 +1472,32 @@ function openModal(planLabel){
 }
 
 function closeModal(){
+  document.body.classList.remove('modal-open');
   document.getElementById('overlay').classList.remove('open');
 }
 
 document.addEventListener('keydown', function(e){
   if(e.key === 'Escape') closeModal();
 });
+
+const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+const mainNav = document.getElementById('mainNav');
+
+if (mobileMenuToggle && mainNav) {
+  mobileMenuToggle.addEventListener('click', () => {
+    const isOpen = mainNav.classList.toggle('open');
+    mobileMenuToggle.setAttribute('aria-expanded', String(isOpen));
+    mobileMenuToggle.textContent = isOpen ? '✕' : '☰';
+  });
+
+  mainNav.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', () => {
+      mainNav.classList.remove('open');
+      mobileMenuToggle.setAttribute('aria-expanded', 'false');
+      mobileMenuToggle.textContent = '☰';
+    });
+  });
+}
 </script>
 
 </body>
