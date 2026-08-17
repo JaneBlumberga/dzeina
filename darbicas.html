@@ -26,6 +26,10 @@ body{
   font-family:var(--font-body);
 }
 
+body.modal-open{
+  overflow:hidden;
+}
+
 /* Header */
 header{
   position:fixed;
@@ -78,11 +82,85 @@ nav a:hover{
   background:rgba(255,255,255,0.6);
 }
 
+.mobile-menu-toggle{
+  display:none;
+}
+
 @media (max-width:680px){
-  header{padding:16px 18px;flex-wrap:wrap;gap:12px;}
-  .logo{font-size:17px;padding:11px 18px;}
-  nav{gap:2px;padding:6px;}
-  nav a{font-size:12px;padding:8px 11px;}
+  header{
+    position:fixed;
+    top:18px;
+    left:50%;
+    transform:translateX(-50%);
+    width:auto;
+    max-width:calc(100vw - 20px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    padding:10px 12px;
+    background:rgba(255,255,255,0.18);
+    backdrop-filter:blur(10px);
+    border:1px solid rgba(255,255,255,0.35);
+    border-radius:999px;
+    box-shadow:0 12px 30px rgba(0,0,0,0.12);
+  }
+
+  .logo{display:none;}
+
+  .mobile-menu-toggle{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:54px;
+    height:54px;
+    border:none;
+    border-radius:50%;
+    background:var(--clay);
+    box-shadow:0 12px 24px rgba(223,133,69,0.35);
+    cursor:pointer;
+    color:#fff;
+    font-size:28px;
+    line-height:1;
+  }
+
+  nav{
+    position:fixed;
+    top:84px;
+    left:50%;
+    transform:translateX(-50%) translateY(-8px);
+    width:min(320px, calc(100vw - 24px));
+    display:none;
+    flex-direction:column;
+    gap:8px;
+    background:rgba(255,255,255,0.22);
+    border:1px solid rgba(255,255,255,0.4);
+    border-radius:22px;
+    padding:12px;
+    backdrop-filter:blur(10px);
+    box-shadow:0 18px 40px rgba(0,0,0,0.18);
+  }
+
+  nav.open{
+    display:flex;
+    transform:translateX(-50%) translateY(0);
+  }
+
+  nav a{
+    display:block;
+    width:100%;
+    text-align:center;
+    padding:14px 16px;
+    border-radius:14px;
+    background:rgba(255,255,255,0.12);
+    color:var(--brown);
+    font-size:15px;
+    font-weight:700;
+  }
+
+  nav a:hover{ background:rgba(255,255,255,0.2); transform:none; }
+
+  .hero .content{ max-width:none; width:calc(100% - 36px); padding:32px 26px; }
 }
 
 /* Hero */
@@ -590,6 +668,7 @@ nav a:hover{
   justify-content:center;
   padding:20px;
   z-index:50;
+  overflow-y:auto;
 }
 
 .overlay.open{
@@ -601,9 +680,11 @@ nav a:hover{
   border-radius:14px;
   max-width:420px;
   width:100%;
+  max-height:calc(100vh - 24px);
   padding:32px 28px;
   position:relative;
   box-shadow:0 20px 50px rgba(91,67,50,0.25);
+  overflow-y:auto;
 }
 
 .modal-close{
@@ -616,6 +697,193 @@ nav a:hover{
   color:var(--brown-soft);
   cursor:pointer;
   line-height:1;
+}
+
+.calendar-card{
+  background:var(--peach);
+  border:1px solid var(--mist);
+  border-radius:12px;
+  padding:8px 10px 10px;
+  margin-top:8px;
+}
+
+.calendar-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  padding:8px 12px 12px;
+}
+
+.calendar-month-label{
+  font-size:14px;
+  font-weight:700;
+  color:var(--brown);
+}
+
+.calendar-nav-btn{
+  border:none;
+  background:var(--clay);
+  color:#fff;
+  width:30px;
+  height:30px;
+  border-radius:50%;
+  font-size:22px;
+  line-height:1;
+  cursor:pointer;
+}
+
+.calendar-nav-btn:disabled{
+  opacity:0.4;
+  cursor:not-allowed;
+}
+
+.calendar-weekdays,
+.calendar-days{
+  display:grid;
+  grid-template-columns:repeat(7, minmax(0, 1fr));
+  gap:6px;
+  padding-left:8px;
+  padding-right:8px;
+}
+
+.calendar-weekdays{
+  padding-bottom:6px;
+}
+
+.calendar-weekdays span,
+.calendar-days div{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:32px;
+  border-radius:8px;
+  font-size:12px;
+  font-weight:600;
+}
+
+.calendar-weekdays span{
+  color:var(--brown-soft);
+}
+
+.calendar-days{
+  padding-top:8px;
+  padding-bottom:12px;
+}
+
+.calendar-day{
+  background:#fff;
+  color:var(--brown);
+  border:1px solid transparent;
+}
+
+.calendar-day.empty{
+  background:transparent;
+  border-color:transparent;
+}
+
+.calendar-day.available{
+  border-color:var(--mist);
+  cursor:pointer;
+}
+
+.calendar-day.available:hover{
+  border-color:var(--clay);
+  background:#fff4ea;
+}
+
+.calendar-day.selected{
+  background:var(--clay);
+  border-color:var(--clay);
+  color:#fff;
+}
+
+.calendar-legend{
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  padding:0 12px 12px;
+  font-size:12px;
+  color:var(--brown-soft);
+}
+
+.dot{
+  display:inline-block;
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:var(--clay);
+  margin-right:6px;
+  vertical-align:middle;
+}
+
+.field-hint{
+  margin:10px 0 0;
+  font-size:12px;
+  color:var(--brown-soft);
+}
+
+@media (max-width:480px){
+  .overlay{
+    padding:8px;
+  }
+
+  .modal{
+    max-width:100%;
+    max-height:calc(100vh - 16px);
+    padding:24px 12px 18px;
+  }
+
+  .modal-close{
+    top:10px;
+    right:10px;
+    font-size:18px;
+  }
+
+  .modal h2{
+    font-size:20px;
+  }
+
+  .modal-plan{
+    margin-bottom:16px;
+  }
+
+  .field{
+    margin-bottom:12px;
+  }
+
+  .field input,
+  .field select,
+  .modal .cta{
+    font-size:16px;
+  }
+
+  .calendar-card{
+    padding:6px 8px 8px;
+  }
+
+  .calendar-header{
+    padding:8px;
+  }
+
+  .calendar-nav-btn{
+    width:26px;
+    height:26px;
+    font-size:18px;
+  }
+
+  .calendar-weekdays,
+  .calendar-days{
+    gap:4px;
+    padding-left:8px;
+    padding-right:8px;
+  }
+
+  .calendar-weekdays span,
+  .calendar-days div{
+    min-height:28px;
+    font-size:10.5px;
+  }
 }
 
 .modal h2{
@@ -728,7 +996,8 @@ footer{
 
 <header id="siteHeader">
   <div class="logo">Spindzeles</div>
-  <nav>
+  <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Atvērt izvēlni" aria-expanded="false">☰</button>
+  <nav id="mainNav">
     <a href="index.html">Sākums</a>
     <a href="darbicas.html">Darbnīcas</a>
     <a href="rokdarbi.html">Radošas nodarbības</a>
@@ -856,48 +1125,138 @@ footer{
 </section>
 
 <!-- Registration popup -->
-<div class="overlay" id="overlay" onclick="if(event.target===this) closeModal()">
+<div class="overlay" id="overlay"
+     onclick="if(event.target===this) closeModal()">
+
   <div class="modal">
-    <button type="button" class="modal-close" onclick="closeModal()" aria-label="Aizvērt">✕</button>
+
+    <button
+      type="button"
+      class="modal-close"
+      onclick="closeModal()"
+      aria-label="Aizvērt">
+      ✕
+    </button>
 
     <div id="formView">
+
       <h2>Reģistrācija</h2>
+
       <p class="modal-plan" id="modalPlan"></p>
+
       <form id="regForm" onsubmit="submitForm(event)">
-        <div class="field">
-          <label for="parentName">Vecāka vārds, uzvārds</label>
-          <input type="text" id="parentName" required>
-        </div>
-        <div class="field">
-          <label for="childName">Bērna vārds, vecums</label>
-          <input type="text" id="childName" required>
-        </div>
-        <div class="field">
-          <label for="email">E-pasts</label>
-          <input type="email" id="email" required>
-        </div>
-        <div class="field">
-          <label for="phone">Tālrunis</label>
-          <input type="tel" id="phone" required>
-        </div>
-        <div class="field">
-          <label>Nodarbības diena un laiks</label>
-          <div class="day-select" role="radiogroup" aria-label="Nodarbības diena un laiks">
-            <input type="radio" id="daySat10" name="day" value="Sestdiena, 10:00" required>
-            <label for="daySat10" class="day-option">Sestdiena<br>10:00</label>
 
-            <input type="radio" id="daySat16" name="day" value="Sestdiena, 16:00" required>
-            <label for="daySat16" class="day-option">Sestdiena<br>16:00</label>
+        <div class="field">
+          <label for="parentName">
+            Vecāka vārds, uzvārds
+          </label>
+
+          <input
+            type="text"
+            id="parentName"
+            required>
+        </div>
+
+        <div class="field">
+          <label for="childName">
+            Bērna vārds, vecums
+          </label>
+
+          <input
+            type="text"
+            id="childName"
+            required>
+        </div>
+
+        <div class="field">
+          <label for="email">
+            E-pasts
+          </label>
+
+          <input
+            type="email"
+            id="email"
+            required>
+        </div>
+
+        <div class="field">
+          <label for="phone">
+            Tālrunis
+          </label>
+
+          <input
+            type="tel"
+            id="phone"
+            required>
+        </div>
+
+        <div class="field">
+          <label>Izvēlies datumu</label>
+
+          <div class="calendar-card" id="calendarCard">
+            <div class="calendar-header">
+              <button type="button" class="calendar-nav-btn" id="calPrev" aria-label="Iepriekšējais mēnesis">‹</button>
+              <span class="calendar-month-label" id="calMonthLabel"></span>
+              <button type="button" class="calendar-nav-btn" id="calNext" aria-label="Nākamais mēnesis">›</button>
+            </div>
+
+            <div class="calendar-weekdays">
+              <span>S</span><span>P</span><span>O</span><span>T</span><span>C</span><span>P</span><span>S</span>
+            </div>
+
+            <div class="calendar-days" id="calendarDays"></div>
+
+            <div class="calendar-legend">
+              <span><span class="dot"></span> Pieejams datums</span>
+            </div>
           </div>
+
+          <input type="hidden" id="classDate">
+
+          <p class="field-hint">Pieejami tikai datumi: 5. septembris un 26. septembris.</p>
         </div>
-        <button type="submit" class="cta">Apstiprināt pieteikumu</button>
+
+        <div class="field">
+          <label for="classTime">Izvēlies laiku</label>
+          <select id="classTime" required>
+            <option value="" disabled selected>-- vispirms izvēlies datumu --</option>
+          </select>
+        </div>
+
+        <button
+          type="submit"
+          class="cta"
+          id="submitButton">
+
+          Apstiprināt pieteikumu
+
+        </button>
+
       </form>
+
     </div>
 
-    <div class="form-success" id="successView">
-      <p>Paldies! Pieteikums saņemts — drīzumā sazināsimies, lai apstiprinātu dalību.</p>
-      <button type="button" class="cta" onclick="closeModal()">Aizvērt</button>
+    <div
+      class="form-success"
+      id="successView"
+      style="display:none;">
+
+      <p>
+        Paldies! Pieteikums saņemts —
+        drīzumā sazināsimies, lai apstiprinātu dalību.
+      </p>
+
+      <button
+        type="button"
+        class="cta"
+        onclick="closeModal()">
+
+        Aizvērt
+
+      </button>
+
     </div>
+
   </div>
 </div>
 
@@ -906,32 +1265,237 @@ footer{
 </footer>
 
 <script>
-  window.addEventListener('scroll', function(){
-    document.getElementById('siteHeader').classList.toggle('scrolled', window.scrollY > 30);
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxwyMLHH-QP1LuwsodjRqYKIby0Dd6-VPy2UWUIYB4ciT0CHNoVsuvrZn3w_nSrjqsu/exec";
+
+const AVAILABLE_SLOTS = {
+  "2026-09-05": ["10:00", "16:00"],
+  "2026-09-26": ["10:00", "15:00"]
+};
+
+const MONTH_NAMES_LV = [
+  "Janvāris","Februāris","Marts","Aprīlis","Maijs","Jūnijs",
+  "Jūlijs","Augusts","Septembris","Oktobris","Novembris","Decembris"
+];
+
+const DAY_NAMES_LV = [
+  "Svētdiena","Pirmdiena","Otrdiena","Trešdiena","Ceturtdiena","Piektdiena","Sestdiena"
+];
+
+const CAL_MIN_DATE = new Date(2026, 8, 1);
+const CAL_MAX_YEAR = 2026;
+const CAL_MAX_MONTH = 8;
+
+const dateInput = document.getElementById("classDate");
+const timeSelect = document.getElementById("classTime");
+const calDaysEl = document.getElementById("calendarDays");
+const calLabelEl = document.getElementById("calMonthLabel");
+const calPrevBtn = document.getElementById("calPrev");
+const calNextBtn = document.getElementById("calNext");
+
+let calYear = CAL_MIN_DATE.getFullYear();
+let calMonth = CAL_MIN_DATE.getMonth();
+let selectedDate = null;
+
+function pad(n) {
+  return n.toString().padStart(2, "0");
+}
+
+function formatDateValue(date) {
+  return date.getFullYear() + "-" + pad(date.getMonth() + 1) + "-" + pad(date.getDate());
+}
+
+function dateLabel(dateKey) {
+  const parts = dateKey.split("-");
+  const d = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+  return DAY_NAMES_LV[d.getDay()] + ", " + d.getDate() + ". " + MONTH_NAMES_LV[d.getMonth()].toLowerCase();
+}
+
+function renderTimeOptions(dateKey) {
+  timeSelect.innerHTML = "";
+
+  if (!dateKey) {
+    timeSelect.innerHTML = '<option value="" disabled selected>-- vispirms izvēlies datumu --</option>';
+    return;
+  }
+
+  const placeholder = document.createElement("option");
+  placeholder.value = "";
+  placeholder.disabled = true;
+  placeholder.selected = true;
+  placeholder.textContent = dateLabel(dateKey) + " — izvēlies laiku";
+  timeSelect.appendChild(placeholder);
+
+  AVAILABLE_SLOTS[dateKey].forEach(function(slot) {
+    const opt = document.createElement("option");
+    opt.value = slot;
+    opt.textContent = slot;
+    timeSelect.appendChild(opt);
+  });
+}
+
+function renderCalendar() {
+  calLabelEl.textContent = MONTH_NAMES_LV[calMonth] + " " + calYear;
+  calPrevBtn.disabled = (calYear === CAL_MIN_DATE.getFullYear() && calMonth === CAL_MIN_DATE.getMonth());
+  calNextBtn.disabled = (calYear === CAL_MAX_YEAR && calMonth === CAL_MAX_MONTH);
+  calDaysEl.innerHTML = "";
+
+  const firstDay = new Date(calYear, calMonth, 1);
+  const startOffset = firstDay.getDay();
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+
+  for (let i = 0; i < startOffset; i++) {
+    const empty = document.createElement("div");
+    empty.className = "calendar-day empty";
+    calDaysEl.appendChild(empty);
+  }
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const date = new Date(calYear, calMonth, d);
+    const cell = document.createElement("div");
+    cell.className = "calendar-day";
+    cell.textContent = d;
+
+    const dateKey = formatDateValue(date);
+    const isAvailable = Object.prototype.hasOwnProperty.call(AVAILABLE_SLOTS, dateKey);
+
+    if (isAvailable) {
+      cell.classList.add("available");
+      if (selectedDate && date.getTime() === selectedDate.getTime()) {
+        cell.classList.add("selected");
+      }
+
+      cell.addEventListener("click", function() {
+        selectedDate = date;
+        dateInput.value = dateKey;
+        renderCalendar();
+        renderTimeOptions(dateKey);
+      });
+    }
+
+    calDaysEl.appendChild(cell);
+  }
+}
+
+function initCalendar() {
+  calYear = CAL_MIN_DATE.getFullYear();
+  calMonth = CAL_MIN_DATE.getMonth();
+  selectedDate = null;
+  dateInput.value = "";
+  renderTimeOptions(null);
+  renderCalendar();
+}
+
+calPrevBtn.addEventListener("click", function() {
+  calMonth--;
+  if (calMonth < 0) {
+    calMonth = 11;
+    calYear--;
+  }
+  renderCalendar();
+});
+
+calNextBtn.addEventListener("click", function() {
+  if (calYear === CAL_MAX_YEAR && calMonth === CAL_MAX_MONTH) return;
+  calMonth++;
+  if (calMonth > 11) {
+    calMonth = 0;
+    calYear++;
+  }
+  renderCalendar();
+});
+
+initCalendar();
+
+async function submitForm(event) {
+  event.preventDefault();
+
+  const form = document.getElementById("regForm");
+  const button = document.getElementById("submitButton");
+
+  if (!dateInput.value || !timeSelect.value) {
+    alert("Lūdzu, izvēlieties datumu un laiku.");
+    return;
+  }
+
+  const chosenDate = new Date(dateInput.value + "T00:00:00");
+  const dayName = DAY_NAMES_LV[chosenDate.getDay()];
+
+  const data = {
+    parentName: document.getElementById("parentName").value.trim(),
+    childName: document.getElementById("childName").value.trim(),
+    email: document.getElementById("email").value.trim(),
+    phone: document.getElementById("phone").value.trim(),
+    date: dateInput.value,
+    day: dayName,
+    time: timeSelect.value
+  };
+
+  button.disabled = true;
+  button.textContent = "Nosūta...";
+
+  try {
+    await fetch(GOOGLE_SCRIPT_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8"
+      },
+      body: JSON.stringify(data)
+    });
+
+    document.getElementById("formView").style.display = "none";
+    document.getElementById("successView").style.display = "block";
+    form.reset();
+    initCalendar();
+  } catch (error) {
+    console.error("Kļūda:", error);
+    alert("Neizdevās nosūtīt pieteikumu. Lūdzu, mēģiniet vēlreiz.");
+  } finally {
+    button.disabled = false;
+    button.textContent = "Apstiprināt pieteikumu";
+  }
+}
+
+window.addEventListener('scroll', function(){
+  document.getElementById('siteHeader').classList.toggle('scrolled', window.scrollY > 30);
+});
+
+function openModal(planLabel){
+  document.body.classList.add('modal-open');
+  document.getElementById('modalPlan').textContent = planLabel;
+  document.getElementById('formView').style.display = 'block';
+  document.getElementById('successView').style.display = 'none';
+  document.getElementById('regForm').reset();
+  initCalendar();
+  document.getElementById('overlay').classList.add('open');
+}
+
+function closeModal(){
+  document.body.classList.remove('modal-open');
+  document.getElementById('overlay').classList.remove('open');
+}
+
+document.addEventListener('keydown', function(e){
+  if(e.key === 'Escape') closeModal();
+});
+
+const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+const mainNav = document.getElementById('mainNav');
+
+if (mobileMenuToggle && mainNav) {
+  mobileMenuToggle.addEventListener('click', () => {
+    const isOpen = mainNav.classList.toggle('open');
+    mobileMenuToggle.setAttribute('aria-expanded', String(isOpen));
+    mobileMenuToggle.textContent = isOpen ? '✕' : '☰';
   });
 
-  function openModal(planLabel){
-    document.getElementById('modalPlan').textContent = planLabel;
-    document.getElementById('formView').style.display = 'block';
-    document.getElementById('successView').classList.remove('show');
-    document.getElementById('regForm').reset();
-    document.getElementById('overlay').classList.add('open');
-  }
-
-  function closeModal(){
-    document.getElementById('overlay').classList.remove('open');
-  }
-
-  function submitForm(e){
-    e.preventDefault();
-    // TODO: send this data to your backend / email service / Google Form endpoint
-    document.getElementById('formView').style.display = 'none';
-    document.getElementById('successView').classList.add('show');
-  }
-
-  document.addEventListener('keydown', function(e){
-    if(e.key === 'Escape') closeModal();
+  mainNav.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', () => {
+      mainNav.classList.remove('open');
+      mobileMenuToggle.setAttribute('aria-expanded', 'false');
+      mobileMenuToggle.textContent = '☰';
+    });
   });
+}
 </script>
 
 </body>
