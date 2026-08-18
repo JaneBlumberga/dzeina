@@ -1295,6 +1295,7 @@ const calNextBtn = document.getElementById("calNext");
 let calYear = CAL_MIN_DATE.getFullYear();
 let calMonth = CAL_MIN_DATE.getMonth();
 let selectedDate = null;
+let currentPlan = "";
 
 function pad(n) {
   return n.toString().padStart(2, "0");
@@ -1427,7 +1428,8 @@ async function submitForm(event) {
     phone: document.getElementById("phone").value.trim(),
     date: dateInput.value,
     day: dayName,
-    time: timeSelect.value
+    time: timeSelect.value,
+    plan: currentPlan
   };
 
   button.disabled = true;
@@ -1460,6 +1462,7 @@ window.addEventListener('scroll', function(){
 });
 
 function openModal(planLabel){
+  currentPlan = planLabel;
   document.body.classList.add('modal-open');
   document.getElementById('modalPlan').textContent = planLabel;
   document.getElementById('formView').style.display = 'block';
